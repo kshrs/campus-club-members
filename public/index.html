@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Club Members Directory</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.25rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .form-group input, .form-group select {
+            padding: 0.65rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        button.btn-submit {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        button.btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Campus Club Members Directory</h1>
+            <p>Full Stack MongoDB & Node.js Application</p>
+        </header>
+
+        <div class="status-bar">
+            <div class="status-dot"></div>
+            <span id="systemStatus">System: Online | Loaded via Express & MongoDB API</span>
+        </div>
+
+        <section class="card">
+            <h2 style="margin-bottom: 1rem; font-size: 1.25rem;">Register New Club Member</h2>
+            <form id="memberForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required placeholder="e.g. Arun Kumar">
+                    </div>
+                    <div class="form-group">
+                        <label for="rollNumber">Roll Number</label>
+                        <input type="text" id="rollNumber" required placeholder="e.g. 22BIT001">
+                    </div>
+                    <div class="form-group">
+                        <label for="club">Club Name</label>
+                        <select id="club" required>
+                            <option value="">Select Club</option>
+                            <option value="Coding Club">Coding Club</option>
+                            <option value="Robotics Club">Robotics Club</option>
+                            <option value="Design Club">Design Club</option>
+                            <option value="Literary Club">Literary Club</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select id="role">
+                            <option value="Member">Member</option>
+                            <option value="Lead">Lead</option>
+                            <option value="Co-Lead">Co-Lead</option>
+                            <option value="Treasurer">Treasurer</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required placeholder="e.g. arun@example.com">
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Add Member</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2 style="margin-bottom: 1rem; font-size: 1.25rem;">Enrolled Members</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Roll Number</th>
+                            <th>Name</th>
+                            <th>Club</th>
+                            <th>Role</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                        <!-- Dynamic items -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        async function fetchMembers() {
+            try {
+                const res = await fetch('/api/members');
+                const members = await res.json();
+                const tbody = document.getElementById('membersTableBody');
+                tbody.innerHTML = '';
+
+                members.forEach(m => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${m.rollNumber}</strong></td>
+                        <td>${m.name}</td>
+                        <td><span class="badge">${m.club}</span></td>
+                        <td>${m.role}</td>
+                        <td>${m.email}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error('Error fetching members:', err);
+            }
+        }
+
+        document.getElementById('memberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const memberData = {
+                name: document.getElementById('name').value,
+                rollNumber: document.getElementById('rollNumber').value,
+                club: document.getElementById('club').value,
+                role: document.getElementById('role').value,
+                email: document.getElementById('email').value
+            };
+
+            try {
+                const res = await fetch('/api/members', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(memberData)
+                });
+                if (res.ok) {
+                    document.getElementById('memberForm').reset();
+                    fetchMembers();
+                } else {
+                    alert('Error adding member');
+                }
+            } catch (err) {
+                console.error('Error adding member:', err);
+            }
+        });
+
+        // Initialize on page load
+        fetchMembers();
+    </script>
+</body>
+</html>
