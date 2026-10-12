@@ -59,14 +59,23 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// 2. Get all members
+// 2. Get all members (supports optional filtering by club)
 app.get('/api/members', async (req, res) => {
     try {
+        const { club, search } = req.query;
+        let query = {};
+        if (club) query.club = club;
+        if (search) query.name = { $regex: search, $options: 'i' };
+
         if (mongoose.connection.readyState === 1) {
-            const members = await Member.find().sort({ joinedAt: -1 });
+            const members = await Member.find(query).sort({ joinedAt: -1 });
             return res.json(members);
         }
-        res.json(inMemoryMembers);
+
+        let filtered = [...inMemoryMembers];
+        if (club) filtered = filtered.filter(m => m.club.toLowerCase() === club.toLowerCase());
+        if (search) filtered = filtered.filter(m => m.name.toLowerCase().includes(search.toLowerCase()));
+        res.json(filtered);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch members' });
     }
